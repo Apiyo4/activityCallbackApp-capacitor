@@ -26,13 +26,13 @@ public class ImportantActivity extends AppCompatActivity implements View.OnClick
             setResult(RESULT_OK, intent);
             finish();
             getApplicationContext().stopService(new Intent( this, BtnClickedService.class));
-            getApplicationContext().stopService(new Intent( this, ImportantActivity.class));
+//            getApplicationContext().stopService(new Intent( this, ImportantActivity.class));
         }else if(view == stop){
             intent.putExtra("numberOperation", "tripleNumber");
             setResult(RESULT_OK, intent);
             finish();
             getApplicationContext().stopService(new Intent( this, BtnClickedService.class));
-            getApplicationContext().stopService(new Intent( this, ImportantActivity.class));
+//            getApplicationContext().stopService(new Intent( this, ImportantActivity.class));
         }
     }
 }
