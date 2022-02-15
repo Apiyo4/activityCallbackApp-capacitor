@@ -1,6 +1,11 @@
 package com.example.app;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.Build;
+import android.os.IBinder;
 
 import androidx.activity.result.ActivityResult;
 
@@ -13,6 +18,8 @@ import com.getcapacitor.annotation.CapacitorPlugin;
 
 @CapacitorPlugin(name = "Echo")
 public class EchoPlugin extends Plugin {
+    private BtnClickedService btnService;
+    private Boolean isBound;
 
     @PluginMethod()
     public void echo(PluginCall call) {
@@ -21,9 +28,22 @@ public class EchoPlugin extends Plugin {
         JSObject ret = new JSObject();
         ret.put("value", value);
         Intent i = new Intent(getActivity(), BtnClickedService.class);
+//        Intent intent = new Intent(context, YOUR_SERVICE_NAME.class);
+        getActivity().bindService(i, mConnection, Context.BIND_AUTO_CREATE);
 //        getActivity().startService(i);
-//        Intent intent = new Intent(getActivity(), ImportantActivity.class);
-        startActivityForResult(call, i, "getBookChatStatus");
+//        getActivity().unbindService(mConnection);
+//        context.startForegroundService(intent);
+//        getActivity().startService(i);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            getActivity().startForegroundService(i);
+        }
+        Intent intent = new Intent(getActivity(), ImportantActivity.class);
+//        if(isBound){
+//            System.out.println("abcd" + "isbound");
+//            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(call, intent, "getBookChatStatus");
+//        }
+
     }
     @ActivityCallback
     public void getBookChatStatus(PluginCall call, ActivityResult result){
@@ -38,4 +58,19 @@ public class EchoPlugin extends Plugin {
 //        call.resolve(ret);
 
     }
+    private ServiceConnection mConnection = new ServiceConnection() {
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            // Service is connected
+            System.out.println("abcd" + "serviceconnected!");
+            btnService = ((BtnClickedService.CallBinder)service).getService();
+            isBound = true;
+        }
+
+        public void onServiceDisconnected(ComponentName className) {
+            // Do things when Service is disconnected
+            System.out.println("abcd" + "service disconnected!");
+            btnService = null;
+            isBound = false;
+        }
+    };
 }

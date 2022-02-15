@@ -6,12 +6,15 @@ import android.app.Service
 import android.content.Intent
 import android.os.Build
 import android.graphics.BitmapFactory
+import android.os.Binder
 import android.os.IBinder
 import android.widget.RemoteViews
 
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 
 class BtnClickedService: Service() {
+    private val binder by lazy { CallBinder() }
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         createIncomingNotification();
 
@@ -74,12 +77,24 @@ class BtnClickedService: Service() {
         }
     }
 
-    override fun onBind(p0: Intent?): IBinder? {
-//        TODO("Not yet implemented")
-        return null;
-    }
+//    override fun onBind(p0: Intent?): IBinder? {
+////        TODO("Not yet implemented")
+//        return null;
+//    }
+    override fun onBind(intent: Intent?): IBinder = binder
+
+
+
     override fun onDestroy() {
         super.onDestroy()
+        NotificationManagerCompat.from(this).cancel(1124);
+        stopForeground(true);
+    }
+    private fun getNotificationManager(): NotificationManager? {
+        return getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+    }
+    inner class CallBinder : Binder() {
+        fun getService(): BtnClickedService = this@BtnClickedService
     }
 
 }
