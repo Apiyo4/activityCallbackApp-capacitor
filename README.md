@@ -9,6 +9,7 @@ local machine for development and testing purposes.
 For development, you will need to have installed on your machine:
 
 - [Node](https://nodejs.org)
+- Android Studio
 
 #### To start app
 
@@ -16,8 +17,8 @@ For development, you will need to have installed on your machine:
 -  npm run start
 
 #### To start the app with mobile
-
-- Run npx cap run sync
+- Run npm run build
+- Run npx cap sync
 - Run npx cap open android
 - Run the app in android studio using run button on simulator or on mobile
  
